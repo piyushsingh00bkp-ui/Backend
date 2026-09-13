@@ -1,0 +1,5 @@
+So what a server does ? 
+it has a port open for every device on the internet 
+it recieves request and answers every according to it 
+basically the general ports are 80,443
+it serves static file , pictures , data 
