@@ -1,0 +1,27 @@
+A URL (Uniform Resource Locator) is the unique web address
+ used to locate and access resources like web pages, images, or files on the internet
+
+ https://www.geeksforgeeks.org/ standard structure
+
+ https: this is protocol
+ www.xyz.org this is domain
+
+
+ and the ending / or anything is called path
+
+ types of path /about /contactus 
+
+ nested path /project/1
+
+
+ //query parameter ->A query parameter (often called a query string parameter) is a key-value pair 
+ appended to the end of a URL to provide extra instructions or data to a web server.
+ //                             from here query starts
+ https://www.google.com/search?q=query+paramenter&oq=query+paramenter
+ ? is the seperator 
+ key = value key value pair
+ & this is multi param connetor
+ https://www.google.com/search?q=sidhu+mossewala+height&oq=sidhu+mossewala+height
+
+
+ // ip address is tough to remember thats why we use domain name instead of ip address 

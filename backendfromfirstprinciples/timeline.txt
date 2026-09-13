@@ -1,0 +1,10 @@
+Backend from first principles 
+
+
+
+1>First just dont start with directly from the framework
+understand backend so if language change framework change and you are stable at your job
+
+
+So this playlist is of 24 lecture I am starting this on 13-09-2026
+Today I will complete the Lecture 1,2 i will update this Notes folder daily

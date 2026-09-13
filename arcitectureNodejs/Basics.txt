@@ -1,0 +1,11 @@
+starts with a client ->>>(request) to server ->> this goes into  a event queue 
+another req comes it also goes in event queue->>> now these goes to event loop 
+[Event loop watches on event queue and if soem comes it will pick up that req from queue ]
+
+
+Two types of req Blocking(sync) ////  Non Blocking (async)
+
+
+IfIn Node.js, blocking code stops the execution of the main thread
+ until an operation completes, whereas non-blocking code allows the event
+ loop to continue executing other tasks while the operation runs in the background

@@ -1,0 +1,76 @@
+notes of restfull
+server                   client
+!-> Server and Client Arcitecture
+
+
+A RESTful API (Representational State Transfer) is an architectural style that allows two different
+computer systems to securely exchange information over the internet using standard web protocols
+
+
+1= Client-server architecture is a computing model that splits tasks between service requesters 
+(clients) and service providers (servers) communicating over a network
+2= always respect al http method
+GET POST PUT DELETE PATCH
+What is REST API?
+
+A set of rules you follow when building an API so that it is predictable, clean, and follows industry standards.
+
+REST = Representational State Transfer
+
+Rule 1 — Use correct HTTP methods
+
+Method	Purpose
+GET	Read / fetch data
+POST	Create new data
+PUT / PATCH	Update existing data
+DELETE	Delete data
+
+Rule 2 — Use correct HTTP status codes
+
+Code	Meaning
+200	OK — request succeeded
+201	Created — new data added
+400	Bad Request — client sent wrong data
+401	Unauthorized — login required
+404	Not Found
+500	Server Error
+
+Rule 3 — Return correct response format (JSON)
+
+This is what Piyush meant by "rendering". You send back JSON to the client.
+
+js
+// Express.js example
+app.get("/users", (req, res) => {
+    res.status(200).json({
+        success: true,
+        data: { id: 1, name: "Prash" }
+    })
+})
+
+Rule 4 — Use proper URL naming
+
+✅ GET     /users          → get all users
+✅ GET     /users/1        → get user with id 1
+✅ POST    /users          → create a user
+✅ PUT     /users/1        → update user with id 1
+✅ DELETE  /users/1        → delete user with id 1
+
+❌ /getUsers
+❌ /createNewUser
+❌ /deleteUserById
+
+URLs should be nouns, not verbs. The HTTP method is the verb.
+
+The full picture
+
+Client                            Server
+  |                                  |
+  |--- GET /users/1 --------------> |
+  |                                  |
+  |<-- { "name": "Prash" } ---------|
+  |   (status: 200)                  |
+
+One line summary
+
+REST = right method + right URL + right status code + JSON response

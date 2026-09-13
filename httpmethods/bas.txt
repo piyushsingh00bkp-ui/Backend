@@ -1,0 +1,17 @@
+HTTP methods (also known as HTTP verbs) specify 
+the exact action to be performed on a web resource.
+
+
+when we write any kinda link in browser thats called get request
+GET (Read): Retrieves data from a server without modifying anything. 
+Requests are cacheable and pass data directly in the URL string
+
+
+POST (Create): Submits data to the server to create a new resource or trigger a process. 
+The payload is enclosed inside the request body rather than the URL.
+PUT (Update/Replace): Completely replaces an existing target resource with the new uploaded payload.
+ If the resource does not exist, it may create it
+
+
+ PATCH (Partial Update): Modifies a resource partially rather than rewriting the entire object. 
+ For example, you can change just a user's email address without sending their whole profile
