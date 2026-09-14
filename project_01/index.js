@@ -3,8 +3,20 @@ const users = require("./user.json");
 const app = express();
 const PORT = 8000;
 const fs = require("fs");
+const { json } = require("stream/consumers");
 // Middle ware plugin
 app.use(express.urlencoded({ extended: false }));
+
+app.use((req, res, next) => {
+  console.log("Hello i am middleware1");
+  req.myuser = "Abhijet Dipke";
+  next();
+});
+app.use((req, res, next) => {
+  console.log("Hello i am middleware2", req.myuser);
+
+  next();
+});
 app.listen(PORT, () => {
   console.log("Server Started at port 8000");
 });
@@ -36,8 +48,8 @@ app.get("/users", (req, res) => {
 // });
 app.post("/api/users/", (req, res) => {
   const body = req.body;
-  users.push({ ...body, id });
-  fs.writeFile("user.json",)
+  users.push({ ...body, id: users.length + 1 });
+  fs.writeFile("user.json", JSON.stringify(users), (err, data) => {});
 });
 //for get patch delete almost the routes is smae so we use soemthing diff
 // app.get("/api/users/:id", (req, res) => {

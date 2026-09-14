@@ -1,0 +1,149 @@
+middle ware means a man working in middle of two man 
+Think of it like a security checkpoint at an airport:
+
+You arrive (request)
+First they check your ticket ✈️
+Then they scan your bags 🧳
+Then they check your ID 🪪
+Then you get on the plane (route handler)
+
+Request → [Middleware] → [Middleware] → [Middleware] → Route Handler → Response
+if something wrong itwill return requst from there itself 
+Middleware has a next function which calls the next After completing itself.
+
+middleware blocks a request by simply not calling next() and sending a response itself instead.
+
+app.use((req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ msg: "Blocked! No token." }); // 👈 chain stops here
+  }
+  next(); // only reaches here if token exists
+});
+
+
+
+Its a Kind of Plugin 
+req is a shared object that travels through the entire middleware chain. Any middleware can attach stuff to it,
+ and every middleware/route after it can read that stuff.
+
+ Middleware — Complete Notes
+What is Middleware?
+
+A function that sits between the request and the response in Express. Runs before your route handler gets the request.
+
+Request → [MW1] → [MW2] → [MW3] → Route Handler → Response
+Basic Structure
+js
+app.use((req, res, next) => {
+  // your logic here
+  next(); // pass to next middleware
+});
+
+3 parameters every middleware gets:
+
+req — the incoming request
+res — the response object
+next — function to call the next middleware
+The next() Function
+Calling next() doesn't mean "I'm done" — it calls the next middleware right at that line and comes back
+Think of it like a callstack — goes in, comes back out
+js
+app.use((req, res, next) => {
+  console.log("1");
+  next();              // jumps to next middleware
+  console.log("3");   // runs AFTER next middleware returns
+});
+
+app.use((req, res, next) => {
+  console.log("2");
+  next();
+});
+// Output: 1 → 2 → 3
+Sharing Variables Between Middlewares
+
+req is a shared object — attach anything to it and every middleware/route after can read it.
+
+js
+// MW1 — attach data
+app.use((req, res, next) => {
+  req.user = { name: "Prash", role: "admin" };
+  next();
+});
+
+// MW2 — read it
+app.use((req, res, next) => {
+  console.log(req.user.name); // "Prash" ✅
+  next();
+});
+
+// Route — still accessible
+app.get("/dashboard", (req, res) => {
+  res.json({ user: req.user }); // ✅
+});
+
+⚠️ Order matters — MW2 can only read what MW1 set if MW1 runs first.
+
+How Middleware Blocks a Request
+
+Just don't call next() — send a response yourself instead.
+
+// Normal ✅
+Request → [MW1 next()] → [MW2 next()] → Route
+
+// Blocked ❌
+Request → [MW1 next()] → [MW2 sends res.json()] → 🛑 Route never runs
+
+Always use return when blocking:
+
+js
+// ❌ BAD — sends two responses, crashes
+app.use((req, res, next) => {
+  if (!token) res.status(401).json({ msg: "No token" });
+  next(); // still runs! error: headers already sent
+});
+
+// ✅ GOOD
+app.use((req, res, next) => {
+  if (!token) return res.status(401).json({ msg: "No token" });
+  next();
+});
+Async Middleware
+js
+// ❌ WRONG — next() fires before await finishes
+app.use((req, res, next) => {
+  fetchUser().then(user => { req.user = user; });
+  next(); // req.user not set yet!
+});
+
+// ✅ CORRECT
+app.use(async (req, res, next) => {
+  req.user = await fetchUser(); // wait first
+  next();                       // then pass on
+});
+Real World Example — Auth + Role Check
+js
+// MW1 — verify token, attach user
+const protect = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ msg: "Login first" });
+  req.user = jwt.verify(token, process.env.JWT_SECRET);
+  next();
+};
+
+// MW2 — check role
+const adminOnly = (req, res, next) => {
+  if (req.user.role !== "admin")
+    return res.status(403).json({ msg: "Admins only" });
+  next();
+};
+
+// Route — protected
+app.get("/admin", protect, adminOnly, (req, res) => {
+  res.json({ msg: `Welcome ${req.user.name}` });
+});
+Quick Reference Table
+Middleware does	Result
+calls next()	chain continues ✅
+calls res.json() / res.send()	chain stops, response sent 🛑
+calls neither	request hangs forever ⏳
+calls both	crash — headers already sent 💥
